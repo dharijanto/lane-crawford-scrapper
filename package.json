@@ -1,0 +1,22 @@
+{
+  "name": "lane-crawford-scrapper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^13.9.0",
+    "bluebird": "^3.7.2",
+    "cheerio": "^1.0.0-rc.3",
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.30",
+    "@types/cheerio": "^0.22.16",
+    "@types/lodash": "^4.14.149"
+  }
+}
