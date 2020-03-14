@@ -20,7 +20,7 @@ class Library {
           reject('Failed to connect to the URL provided!')
         } else {
           let data = ''
-          res.once('data', (chunk) => {
+          res.on('data', (chunk) => {
             res.setEncoding('utf8');
             data += chunk
           })

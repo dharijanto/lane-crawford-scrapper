@@ -12,7 +12,8 @@
     "@types/node": "^13.9.0",
     "bluebird": "^3.7.2",
     "cheerio": "^1.0.0-rc.3",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "readline-sync": "^1.4.10"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.30",
