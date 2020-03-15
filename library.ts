@@ -12,13 +12,13 @@ class Library {
     } else if (url.startsWith('https://')) {
       getter = https.get
     } else {
-      return Promise.reject('URL needs to start with either http or https!')
+      return Promise.reject(new Error('URL needs to start with either http or https'))
     }
   
     return new Promise((resolve, reject) => {
       getter(url, res => {
         if (res.statusCode !== 200) {
-          reject('Failed to connect to the URL provided!')
+          reject(new Error('Failed to connect to the URL provided'))
         } else {
           let data = ''
           res.on('data', (chunk) => {
@@ -45,6 +45,12 @@ class Library {
           resolve(JSON.parse(data))
         }
       })
+    })
+  }
+
+  static readOrCreateJSON (loadPath, defaultContent) {
+    return this.readJSON(loadPath).catch(err => {
+      return this.saveJSON (defaultContent, loadPath)
     })
   }
 
