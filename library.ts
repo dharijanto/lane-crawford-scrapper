@@ -1,5 +1,6 @@
 import * as http from 'http'
 import * as https from 'https'
+import * as fs from 'fs'
 
 import * as Promise from 'bluebird'
 
@@ -32,6 +33,30 @@ class Library {
           })
         }
       })
+    })
+  }
+
+  static readJSON (loadPath) {
+    return new Promise((resolve, reject) => {
+      fs.readFile(loadPath, 'utf8', function (err, data) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(JSON.parse(data))
+        }
+      })
+    })
+  }
+
+  static saveJSON (data, savePath) {
+    return new Promise((resolve, reject) => {
+      fs.writeFile(savePath, JSON.stringify(data), 'utf8', function (err) {
+        if (err) {
+            reject(err)
+        } else {
+          resolve()
+        }
+      });
     })
   }
 }
