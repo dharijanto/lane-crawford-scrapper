@@ -1,29 +1,49 @@
-import * as https from 'https'
 import * as fs from 'fs'
+import * as path from 'path'
+import * as https from 'https'
+import * as process from 'process'
 
 import * as Promise from 'bluebird'
+import * as cheerio from 'cheerio'
 import * as _ from 'lodash'
 
-const SAVE_PATH = `${__dirname}\\lane-crawford-images.json`
-const IMAGE_URLS = require(SAVE_PATH)
+import lib from './library'
 
-const urls = Object.keys(IMAGE_URLS)
+const imageListFile = process.argv[2] || './images.json'
+const outputDirectory = process.argv[3] || './images'
 
-Promise.map(urls, url => {
-  const fileName = _.last(url.split('\/'))
-  const file = fs.createWriteStream(`${__dirname}/images/${fileName}`)
-
-  return new Promise((resolve, reject) => {
-    https.get(url, function(res) {
-      if (res.statusCode !== 200) {
-        resolve('Error downloading file=' + fileName)
-      } else {
-        res.pipe(file);
-        res.on('end', () => {
-          console.log('Downloaded file=' + )
-          resolve()
+try {
+  const stat = fs.statSync(outputDirectory)
+  if (stat.isDirectory()) {
+    lib.readOrCreateJSON(imageListFile, {}).then((imageList: any) => {
+      const mountPaths = Object.keys(imageList)
+      const numOfImages = mountPaths.reduce((count, path) => {
+        return count + Object.keys(imageList[path]).length
+      }, 0)
+      console.log(`There are ${numOfImages} images`)
+      return Promise.map(mountPaths, mountPath => {
+        const imagesObj = imageList[mountPath]
+        const imageURLs = Object.keys(imagesObj)
+        return Promise.each(imageURLs, url => {
+          const filename = _.last(url.split('/'))
+          const filepath = path.join(outputDirectory, filename)
+          try {
+            const stat = fs.statSync(filepath)
+            console.log(`Skipping ${filename} because it already exists!`)
+            return
+          } catch (err) {
+            console.log(`Downloading ${filename}...`)
+            return lib.downloadToFile(url, filepath)
+          }
         })
-      }
-    });
-  })
-}, { concurrency: 5 })
+      }, { concurrency: 5 })
+    }).catch(err => {
+      console.error('Failed: ' + err.message)
+    })
+  } else {
+    throw new Error('Output directory is not valid!')
+  }
+} catch (err) {
+  console.error('Failed: ' + err.message)
+}
+

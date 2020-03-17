@@ -65,6 +65,35 @@ class Library {
       });
     })
   }
+
+  static downloadToFile (url, filePath) {
+    let getter = null
+    if (url.startsWith('http://')) {
+      getter = http.get
+    } else if (url.startsWith('https://')) {
+      getter = https.get
+    } else {
+      return Promise.reject(new Error('URL needs to start with either http or https'))
+    }
+
+    const file = fs.createWriteStream(filePath)
+    return new Promise((resolve, reject) => {
+      getter(url, function(res) {
+        if (res.statusCode !== 200) {
+          resolve('Unexpected server response')
+        } else {
+          res.pipe(file)
+          res.on('end', () => {
+            resolve()
+          })
+          res.on('error', (err) => {
+            fs.unlinkSync(filePath)
+            reject('Failed to download: ' + err.message)
+          })
+        }
+      })
+    })
+  }
 }
 
 export default Library

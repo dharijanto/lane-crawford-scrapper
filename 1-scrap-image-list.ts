@@ -8,7 +8,6 @@ import * as cheerio from 'cheerio'
 import * as _ from 'lodash'
 
 import lib from './library'
-import { parse } from 'querystring'
 
 const BASE_URL = 'https://www.lanecrawford.com'
 
