@@ -1,8 +1,8 @@
 # Lane Crawford Scrapper
 
--Lane Crawford is luxury retailers based in Hongkong, focusing on Asia.
+- Lane Crawford is luxury retailers based in Hongkong, focusing on Asia.
  They focus mainly on luxury fashion items.
--This repository contains several scripts that I used for scrapping Lane Crawford's
+- This repository contains several scripts that I used for scrapping Lane Crawford's
  product catalog to download the product images.
  
  # 0-scrap-category-list.ts
